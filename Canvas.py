@@ -4,12 +4,12 @@ import time
 
 pygame.init()
 
-size = width, height = 600, 600
+size = width, height = 700, 700
 bg = 50, 50, 50
 
 screen = pygame.display.set_mode(size)
 
-cellsX = cellsY = 100
+cellsX = cellsY = 50
 
 cellsWidth = width / cellsX
 cellsHeight = height / cellsY
@@ -49,38 +49,52 @@ tableState[5, 49] = 1
 tableState[4, 49] = 1
 tableState[3, 49] = 1
 
+play = True
+
 while 1:
-    screen.fill(bg)
+
     newTableState = np.copy(tableState)
+    screen.fill(bg)
+    keyboradPress = pygame.event.get()
+
+    for event in keyboradPress:
+        if event.type == pygame.KEYDOWN:
+            play = not play
+
+        mouseClick = pygame.mouse.get_pressed()
+        if sum(mouseClick) > 0:
+            X,Y = pygame.mouse.get_pos()
+            celc, cely = int(np.floor(X/cellsWidth)),int(np.floor(Y/cellsHeight))
+            newTableState[celc,cely] = not mouseClick[2]
+
 
     for j in range(0, cellsX):
         for i in range(0, cellsY):
+            if play:
 
+
+                neighborsCells = tableState[(i + 1) % cellsX, (j - 1) % cellsY] + \
+                                tableState[(i + 1) % cellsX, j % cellsY] + \
+                                tableState[(i + 1) % cellsX, (j + 1) % cellsY] + \
+                                tableState[i % cellsX, (j - 1) % cellsY] + \
+                                tableState[i % cellsX, (j + 1) % cellsY] + \
+                                tableState[(i - 1) % cellsX, (j - 1) % cellsY] + \
+                                tableState[(i - 1) % cellsX, j % cellsY] + \
+                                tableState[(i - 1) % cellsX, (j + 1) % cellsY]
+
+                # tableState[(x) % cellsX, (y) % cellsY] +
+                if tableState[i, j] == 0 and neighborsCells == 3:
+                    newTableState[i, j] = 1
+                elif tableState[i, j] == 1 and (neighborsCells < 2 or neighborsCells > 3):
+                    newTableState[i, j] = 0
             poly = [(i * cellsWidth, j * cellsHeight),
                     ((i + 1) * cellsWidth, j * cellsHeight),
                     ((i + 1) * cellsWidth, (j + 1) * cellsHeight),
                     (i * cellsWidth, (j + 1) * cellsHeight)]
 
             pygame.draw.polygon(screen, (88, 94, 150), poly, int(abs(1 - tableState[i, j])))
-
-            neighborsCells = tableState[(i + 1) % cellsX, (j - 1) % cellsY] + \
-                             tableState[(i + 1) % cellsX, j % cellsY] + \
-                             tableState[(i + 1) % cellsX, (j + 1) % cellsY] + \
-                             tableState[i % cellsX, (j - 1) % cellsY] + \
-                             tableState[i % cellsX, (j + 1) % cellsY] + \
-                             tableState[(i - 1) % cellsX, (j - 1) % cellsY] + \
-                             tableState[(i - 1) % cellsX, j % cellsY] + \
-                             tableState[(i - 1) % cellsX, (j + 1) % cellsY]
-            if i == 20 and j == 23:
-                print(tableState[20, 23])
-                print("Vecino" + str(neighborsCells))
-
-            # tableState[(x) % cellsX, (y) % cellsY] +
-            if tableState[i, j] == 0 and neighborsCells == 3:
-                newTableState[i, j] = 1
-            elif tableState[i, j] == 1 and (neighborsCells < 2 or neighborsCells > 3):
-                newTableState[i, j] = 0
-
+            
     tableState = np.copy(newTableState)
     time.sleep(0.09)
+
     pygame.display.flip()
