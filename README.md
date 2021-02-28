@@ -8,4 +8,6 @@ line 19 to 50: Just the Cells that i choice to start in One...in other words, li
 
 To run de code on vsco, (in my case) just open the console and search the directory o folder where you copy the code, in this point, use the name of the code with his extension ".py" and press enter, only the program stop when you close up the console.
 
-maybe I update this code in the future...maybe.
+I update the code, add mouse and keyboard event to pause or play the game of live, and at the same time add or remove cells.
+
+I wish that in few months or weeks can focus in this code to update with other conditions, and maybe make some figures. 
