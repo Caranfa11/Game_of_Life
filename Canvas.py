@@ -4,7 +4,7 @@ import time
 
 pygame.init()
 
-size = width, height = 700, 700
+size = width, height = 600, 600
 bg = 50, 50, 50
 
 screen = pygame.display.set_mode(size)
@@ -81,12 +81,15 @@ while 1:
                                 tableState[(i - 1) % cellsX, (j - 1) % cellsY] + \
                                 tableState[(i - 1) % cellsX, j % cellsY] + \
                                 tableState[(i - 1) % cellsX, (j + 1) % cellsY]
+                # tableState[(x) % cellsX, (y) % cellsY]
 
-                # tableState[(x) % cellsX, (y) % cellsY] +
+
                 if tableState[i, j] == 0 and neighborsCells == 3:
                     newTableState[i, j] = 1
                 elif tableState[i, j] == 1 and (neighborsCells < 2 or neighborsCells > 3):
                     newTableState[i, j] = 0
+
+
             poly = [(i * cellsWidth, j * cellsHeight),
                     ((i + 1) * cellsWidth, j * cellsHeight),
                     ((i + 1) * cellsWidth, (j + 1) * cellsHeight),
@@ -95,6 +98,5 @@ while 1:
             pygame.draw.polygon(screen, (88, 94, 150), poly, int(abs(1 - tableState[i, j])))
             
     tableState = np.copy(newTableState)
-    time.sleep(0.09)
-
+    time.sleep(0.1)
     pygame.display.flip()
